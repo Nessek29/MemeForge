@@ -1,0 +1,54 @@
+/* MemeForge styles */
+
+/* A meme is the stored image with captions layered on top. Caption size
+   scales with the width of the meme using container query units. */
+.meme {
+    position: relative;
+    container-type: inline-size;
+    margin: 0;
+    overflow: hidden;
+    background: #111;
+    border-radius: .375rem;
+}
+
+.meme img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.meme.card-img-top {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.meme-large img {
+    aspect-ratio: auto;
+    max-height: 75vh;
+    object-fit: contain;
+}
+
+.meme-text {
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    text-align: center;
+    font-family: Impact, "Anton", "Arial Black", "Helvetica Neue", sans-serif;
+    font-size: 8cqw;
+    line-height: 1.05;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    overflow-wrap: anywhere;
+    -webkit-text-stroke: .08em #000;
+    paint-order: stroke fill;
+    text-shadow:
+        -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
+        0 -2px 0 #000, 0 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000;
+    pointer-events: none;
+}
+
+.meme-top { top: 3%; }
+.meme-bottom { bottom: 3%; }

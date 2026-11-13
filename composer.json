@@ -1,0 +1,27 @@
+{
+    "name": "cst8265/meme",
+    "description": "CST8265 MemeForge meme generator (Lab 6 target application)",
+    "type": "project",
+    "license": "proprietary",
+    "config": {
+        "process-timeout": 0
+    },
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*",
+        "ext-fileinfo": "*",
+        "ext-mbstring": "*"
+    },
+    "suggest": {
+        "ext-curl": "Required for the 'Import from URL' image option"
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public",
+        "reset-db": "php database/build_db.php"
+    },
+    "scripts-descriptions": {
+        "start": "Start MemeForge on http://localhost:8000",
+        "reset-db": "Rebuild and re-seed the SQLite database and clear uploads"
+    }
+}
