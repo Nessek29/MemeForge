@@ -1,6 +1,5 @@
 # MemeForge — Hardening Log
 
----
 
 ## Part A — Baseline (before any change)
 
