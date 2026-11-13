@@ -5,9 +5,29 @@ declare(strict_types=1);
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/images.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+/* -------------------------------------------------------------------------
+ * Security headers (write once, used everywhere)
+ * Must run before session_start() and before any output.
+ * ---------------------------------------------------------------------- */
+
+ header_remove('X-Powered-By');
+
+ header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
+ 
+ header('X-Content-Type-Options: nosniff');
+ header('Referrer-Policy: strict-origin-when-cross-origin');
+ header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+ header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+ 
+ /* Session cookie flags (must be set before session_start) */
+ if (session_status() === PHP_SESSION_NONE) {
+     session_set_cookie_params([
+         'httponly' => true,
+         'samesite' => 'Lax',
+         // 'secure' => true,  // NOT on localhost: plain HTTP would break logins
+     ]);
+     session_start();
+ }
 
 /* -------------------------------------------------------------------------
  * Output encoding (XSS)
@@ -233,11 +253,9 @@ function render_header(string $title = APP_NAME): void
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($title) ?> · <?= e(APP_NAME) ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/bootstrap.min.css" rel="stylesheet">
     <link href="assets/app.css" rel="stylesheet">
-    <style>
-        .navbar-brand .brand-mark { color: #ffc93c; }
-    </style>
+   
 </head>
 
 <body class="bg-body-tertiary">
@@ -284,7 +302,7 @@ function render_footer(): void
     <footer class="container text-center text-body-secondary py-4 small">
         <?= e(APP_NAME) ?> — CST8265 lab application. For educational use only.
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
@@ -294,44 +312,9 @@ function render_footer(): void
 /**
  * Live caption preview for the create/edit forms. Captions are written with
  * textContent, so whatever the user types is never parsed as HTML.
+ * The code lives in assets/preview.js so the CSP can forbid inline scripts.
  */
 function render_preview_script(): void
 {
-?>
-    <script>
-        (function () {
-            var top = document.getElementById('top_text');
-            var bottom = document.getElementById('bottom_text');
-            var previewTop = document.getElementById('preview-top');
-            var previewBottom = document.getElementById('preview-bottom');
-            var previewImg = document.getElementById('preview-img');
-            var template = document.getElementById('template');
-
-            function syncText() {
-                previewTop.textContent = top.value;
-                previewBottom.textContent = bottom.value;
-            }
-            top.addEventListener('input', syncText);
-            bottom.addEventListener('input', syncText);
-
-            if (template) {
-                template.addEventListener('change', function () {
-                    var opt = template.options[template.selectedIndex];
-                    previewImg.src = opt.getAttribute('data-src');
-                });
-            }
-
-            // Show only the inputs for the chosen image source.
-            var radios = document.querySelectorAll('input[name="source"]');
-            function syncSource() {
-                radios.forEach(function (r) {
-                    var panel = document.getElementById('source-' + r.value);
-                    if (panel) { panel.hidden = !r.checked; }
-                });
-            }
-            radios.forEach(function (r) { r.addEventListener('change', syncSource); });
-            syncSource();
-        })();
-    </script>
-<?php
+    echo '<script src="assets/preview.js"></script>';
 }

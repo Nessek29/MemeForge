@@ -84,7 +84,7 @@ render_header('Edit meme');
     </div>
 
     <div class="col-lg-6">
-        <div class="sticky-top" style="top: 1rem; z-index: 1;">
+    <div class="sticky-top preview-sticky">
             <h2 class="h6 text-body-secondary">Preview</h2>
             <figure class="meme shadow-sm">
                 <img id="preview-img" src="<?= e($meme['image_path']) ?>" alt="Preview">
